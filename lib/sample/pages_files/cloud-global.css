@@ -1,0 +1,91 @@
+/* Global Helios Fonts */
+
+@font-face {
+  font-family: "Inv Eina 01";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-Eina01-SemiBold.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-Eina01-SemiBold.woff")
+      format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inv Eina 03";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-Eina03-SemiBold.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-Eina03-SemiBold.woff")
+      format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inv Maison Neue";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-Book.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-Book.woff")
+      format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inv Maison Neue";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-BookItalic.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-BookItalic.woff")
+      format("woff");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Inv Maison Neue";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-Medium.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-Medium.woff")
+      format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inv Maison Neue";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-MediumItalic.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-MediumItalic.woff")
+      format("woff");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Inv Maison Neue";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-Demi.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-Demi.woff")
+      format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inv Maison Neue";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-DemiItalic.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-DemiItalic.woff")
+      format("woff");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Inv Maison Neue";
+  src: url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-Bold.woff2")
+      format("woff2"),
+    url("https://static.invisionapp-cdn.com/global/fonts/Inv-MaisonNeue-Bold.woff")
+      format("woff");
+  font-weight: 900;
+  font-style: normal;
+}
