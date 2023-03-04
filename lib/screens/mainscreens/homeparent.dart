@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
+import 'package:vehicle_maintenance_app/screens/payment/billingmain.dart';
 
 class homeParent extends StatefulWidget {
   const homeParent({Key? key}) : super(key: key);
@@ -10,22 +11,80 @@ class homeParent extends StatefulWidget {
 }
 
 class _homeParentState extends State<homeParent> {
+  late PageController pageController;
+
   int bottomindex = 2;
   double globalpadding = 15;
+  TextStyle dummystyle = TextStyle(
+    fontSize: 25,
+    fontWeight: FontWeight.bold,
+    color: darktext,
+  );
   GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
+  void changePage(int pageindex) {
+    setState(() {
+      bottomindex = pageindex;
+      pageController.animateToPage(pageindex,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.fastLinearToSlowEaseIn);
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    pageController = PageController(initialPage: bottomindex);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
       // appBar: AppBar(),
-      body: Dashboard(
-        mykey: _globalKey,
+      body: PageView(
+        controller: pageController,
+        physics: BouncingScrollPhysics(),
+        onPageChanged: (i) {
+          setState(() {
+            bottomindex = i;
+          });
+        },
+        children: [
+          billingMain(),
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              'Schedule',
+              style: dummystyle,
+            ),
+          ),
+          Dashboard(mykey: _globalKey),
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              'History',
+              style: dummystyle,
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              'Messages',
+              style: dummystyle,
+            ),
+          ),
+        ],
       ),
       endDrawer: Drawer(
         backgroundColor: maintheme,
         width: 300,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(22),
+            bottomLeft: Radius.circular(22),
+          ),
         ),
         child: Container(
           child: Column(
@@ -145,7 +204,7 @@ class _homeParentState extends State<homeParent> {
         unselectedItemColor: Colors.white.withAlpha(150),
         onTap: (index) {
           setState(() {
-            bottomindex = index;
+            changePage(index);
           });
         },
         items: [

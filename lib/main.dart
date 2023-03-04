@@ -4,7 +4,12 @@ import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/loginpage.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
+import 'package:vehicle_maintenance_app/screens/payment/billingmain.dart';
+import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleappointment.dart';
+import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleconfirmation.dart';
+import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulereview.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
+import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulesuccess.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -22,12 +27,20 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'opensans',
+        useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
         colorSchemeSeed: maintheme,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            surfaceTintColor: Colors.white,
+            foregroundColor: maintheme,
+          ),
+        ),
       ),
       // home: LoginPage(),
-      // home: homeParent(),
-      home: scheduleShop(),
+      home: homeParent(),
+      // home: scheduleReview(),
+      // home: billingMain(),
     );
   }
 }

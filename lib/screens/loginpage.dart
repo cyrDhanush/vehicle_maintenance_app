@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -151,7 +152,10 @@ class _LoginPageState extends State<LoginPage> {
               height: 30,
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => homeParent()));
+              },
               style: TextButton.styleFrom(
                 backgroundColor: maintheme,
                 foregroundColor: Colors.white,

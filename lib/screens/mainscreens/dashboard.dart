@@ -4,7 +4,11 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
+import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
+import 'package:vehicle_maintenance_app/widgets/carcarousal.dart';
 
 class Dashboard extends StatefulWidget {
   final GlobalKey<ScaffoldState> mykey;
@@ -17,10 +21,40 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int totalpages = 3;
   int currentpage = 0;
+  void setCurrentpage(int page) {
+    setState(() {
+      currentpage = page;
+    });
+    print(currentpage.toString() + 'from dashboard');
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        scrolledUnderElevation: 0,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        title: Text(
+          'Dashboard',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              widget.mykey.currentState?.openEndDrawer();
+            },
+            icon: Icon(
+              Icons.menu,
+            ),
+          ),
+        ],
+      ),
+      body: Container(
         child: Column(
           children: [
             Container(
@@ -28,37 +62,6 @@ class _DashboardState extends State<Dashboard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 40,
-
-                        //place holder
-                        // color: Colors.blue,
-                      ),
-                      Text(
-                        "DashBoard",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          widget.mykey.currentState?.openEndDrawer();
-                        },
-                        icon: Icon(
-                          Icons.menu_rounded,
-                          size: 30,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
                   Text(
                     'Shops',
                     style: TextStyle(
@@ -89,55 +92,18 @@ class _DashboardState extends State<Dashboard> {
                   SizedBox(
                     height: 15,
                   ),
-                  Container(
-                    height: 180,
-                    width: MediaQuery.of(context).size.width,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: PageView(
-                        physics: BouncingScrollPhysics(),
-                        children: [
-                          buildVehiclecard(),
-                          buildVehiclecard(),
-                          buildVehiclecard(),
-                        ],
-                        onPageChanged: (i) {
-                          setState(() {
-                            currentpage = i;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  //carousal view
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      for (int i = 0; i < totalpages; i++)
-                        Row(
-                          children: [
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 600),
-                              curve: Curves.fastLinearToSlowEaseIn,
-                              height: 7,
-                              width: (i == currentpage) ? (20) : (7),
-                              decoration: BoxDecoration(
-                                color: (i == currentpage)
-                                    ? (maintheme)
-                                    : (Colors.grey.withAlpha(150)),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              child: carCarousal(
+                setCurrentpage: setCurrentpage,
+                items: [
+                  buildVehiclecard(),
+                  buildVehiclecard(),
+                  buildVehiclecard(),
                 ],
               ),
             ),
@@ -189,96 +155,6 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-class buildVehiclecard extends StatelessWidget {
-  const buildVehiclecard({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        height: 180,
-        width: MediaQuery.of(context).size.width,
-        color: Colors.green,
-        child: Stack(
-          children: [
-            ImageFiltered(
-              imageFilter: ImageFilter.blur(
-                sigmaX: 2,
-                sigmaY: 2,
-              ),
-              child: Container(
-                height: 180,
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  'assets/images/vehiclebg.jpg',
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
-            ),
-            Positioned(
-              child: Container(
-                height: 180,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Toyota Prius 2013',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          height: 100,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Today's Mileage",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "134,571",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class scheduleAppointmentTile extends StatelessWidget {
   const scheduleAppointmentTile({Key? key}) : super(key: key);
 
@@ -287,7 +163,10 @@ class scheduleAppointmentTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: globalpadding),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => scheduleShop()));
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           foregroundColor: maintheme,
@@ -306,18 +185,8 @@ class scheduleAppointmentTile extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: maintheme.withAlpha(50),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.calendar_month,
-                          color: Colors.black.withAlpha(200),
-                          size: 30,
-                        ),
+                      iconMaker(
+                        iconData: Icons.calendar_month,
                       ),
                       Positioned(
                         right: 5,
@@ -378,6 +247,29 @@ class scheduleAppointmentTile extends StatelessWidget {
   }
 }
 
+class iconMaker extends StatelessWidget {
+  final IconData iconData;
+  const iconMaker({Key? key, this.iconData = Icons.access_time})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 45,
+      width: 45,
+      decoration: BoxDecoration(
+        color: darktext.withAlpha(30),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        iconData,
+        color: darktext,
+        size: 30,
+      ),
+    );
+  }
+}
+
 class appointmentTile extends StatelessWidget {
   const appointmentTile({Key? key}) : super(key: key);
 
@@ -405,18 +297,8 @@ class appointmentTile extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: maintheme.withAlpha(50),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.timelapse_rounded,
-                          color: Colors.black.withAlpha(200),
-                          size: 30,
-                        ),
+                      iconMaker(
+                        iconData: Icons.timelapse_rounded,
                       ),
                       Positioned(
                         right: 5,
@@ -527,18 +409,8 @@ class _paymentTileState extends State<paymentTile> {
                         children: [
                           Stack(
                             children: [
-                              Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  color: maintheme.withAlpha(50),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.notifications_rounded,
-                                  color: Colors.black.withAlpha(200),
-                                  size: 30,
-                                ),
+                              iconMaker(
+                                iconData: Icons.notifications_rounded,
                               ),
                               Positioned(
                                 right: 5,
