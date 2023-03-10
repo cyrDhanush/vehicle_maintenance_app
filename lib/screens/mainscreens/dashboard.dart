@@ -96,7 +96,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             Container(
-              height: 200,
+              height: 180,
               width: MediaQuery.of(context).size.width,
               child: carCarousal(
                 setCurrentpage: setCurrentpage,
@@ -189,8 +189,8 @@ class scheduleAppointmentTile extends StatelessWidget {
                         iconData: Icons.calendar_month,
                       ),
                       Positioned(
-                        right: 5,
-                        top: 5,
+                        right: 3,
+                        top: 3,
                         child: Container(
                           height: 7,
                           width: 7,
@@ -301,8 +301,8 @@ class appointmentTile extends StatelessWidget {
                         iconData: Icons.timelapse_rounded,
                       ),
                       Positioned(
-                        right: 5,
-                        top: 5,
+                        right: 3,
+                        top: 3,
                         child: Container(
                           height: 7,
                           width: 7,
@@ -413,8 +413,8 @@ class _paymentTileState extends State<paymentTile> {
                                 iconData: Icons.notifications_rounded,
                               ),
                               Positioned(
-                                right: 5,
-                                top: 5,
+                                right: 3,
+                                top: 3,
                                 child: Container(
                                   height: 7,
                                   width: 7,

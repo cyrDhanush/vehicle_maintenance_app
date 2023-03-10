@@ -20,25 +20,28 @@ class _carCarousalState extends State<carCarousal> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: 180,
-          width: MediaQuery.of(context).size.width,
-          child: CarouselSlider(
-            items: [
-              for (var i in widget.items) i,
-            ],
-            options: CarouselOptions(
-                enableInfiniteScroll: false,
-                viewportFraction: 0.85,
-                enlargeCenterPage: true,
-                initialPage: 0,
-                scrollPhysics: BouncingScrollPhysics(),
-                onPageChanged: (int page, s) {
-                  widget.setCurrentpage ?? (page);
-                  setState(() {
-                    currentpage = page;
-                  });
-                }),
+        Expanded(
+          child: Container(
+            // height: 180,
+            width: MediaQuery.of(context).size.width,
+            child: CarouselSlider(
+              items: [
+                for (var i in widget.items) i,
+              ],
+              options: CarouselOptions(
+                  enableInfiniteScroll: false,
+                  viewportFraction: 16 / 9,
+                  enlargeFactor: 0.3,
+                  enlargeCenterPage: true,
+                  initialPage: 0,
+                  scrollPhysics: BouncingScrollPhysics(),
+                  onPageChanged: (int page, s) {
+                    widget.setCurrentpage ?? (page);
+                    setState(() {
+                      currentpage = page;
+                    });
+                  }),
+            ),
           ),
         ),
         SizedBox(
@@ -80,24 +83,35 @@ class buildVehiclecard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(22),
       child: Container(
         height: 180,
-        width: MediaQuery.of(context).size.width,
-        color: Colors.green,
+        width: MediaQuery.of(context).size.width - 30,
+        decoration: BoxDecoration(
+          color: Colors.black,
+        ),
         child: Stack(
           children: [
-            ImageFiltered(
-              imageFilter: ImageFilter.blur(
-                sigmaX: 2,
-                sigmaY: 2,
+            Container(
+              height: 180,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage(
+                    'assets/images/vehiclebg.jpg',
+                  ),
+                ),
               ),
-              child: Container(
-                height: 180,
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  'assets/images/vehiclebg.jpg',
-                  fit: BoxFit.fitWidth,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: 2,
+                  sigmaY: 2,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withAlpha(25),
+                  ),
                 ),
               ),
             ),
@@ -124,7 +138,7 @@ class buildVehiclecard extends StatelessWidget {
                           height: 100,
                           width: 150,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Colors.white.withAlpha(150),
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),

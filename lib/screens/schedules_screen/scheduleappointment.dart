@@ -33,14 +33,14 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
     'December'
   ];
   List days = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
+    'Sun',
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thur',
+    'Fri',
+    'Sat',
+    'Sun',
   ];
 
   int? servicevalue;

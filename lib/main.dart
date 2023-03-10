@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/screens/addnewcar.dart';
 import 'package:vehicle_maintenance_app/screens/loginpage.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/payment/billingmain.dart';
+import 'package:vehicle_maintenance_app/screens/payment/cardselection.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleappointment.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleconfirmation.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulereview.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulesuccess.dart';
+import 'package:vehicle_maintenance_app/screens/successfullscreen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -38,9 +41,10 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // home: LoginPage(),
-      home: homeParent(),
-      // home: scheduleReview(),
-      // home: billingMain(),
+      // home: homeParent(),
+      home: addNewCar(),
+      // home: cardSelection(),
+      // home: successfullScreen(),
     );
   }
 }
