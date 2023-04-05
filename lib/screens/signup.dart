@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/loginpage.dart';
-import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/services/user_auth.dart';
 
 class signUp extends StatefulWidget {
@@ -19,14 +18,61 @@ class _signUpState extends State<signUp> {
   String errortext = '';
   bool obscurepassword = true;
   Authentication _authentication = Authentication();
+  bool loading = false;
+
+  bool validate() {
+    if (email.text != '' && name.text != '' && password.text != '') {
+      //signup
+      return true;
+    } else {
+      setState(() {
+        errortext = '';
+        if (email.text == '') {
+          errortext += 'Enter Email Id\n';
+        }
+        if (name.text == '') {
+          errortext += 'Enter Name\n';
+        }
+        if (password.text == '') {
+          errortext += 'Enter Password Id\n';
+        }
+      });
+      return false;
+    }
+  }
+
+  showSuccess() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text('Sign Up Successfull'),
+        content: Text('You can Login Now'),
+        contentPadding: EdgeInsets.all(30),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Go to Login Page'),
+          ),
+        ],
+      ),
+    );
+  }
 
   signup() async {
+    setState(() {
+      loading = true;
+    });
     var result =
         await _authentication.createUser(name.text, email.text, password.text);
-    if (result.runtimeType == UserCredential) {
+    if (result.runtimeType == bool && result == true) {
       //success
+      await showSuccess();
+
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => homeParent()));
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else if (result.toString().contains('email-already-in-use')) {
       setState(() {
         errortext = 'Email Already in Use\nTry Logging in';
@@ -36,6 +82,9 @@ class _signUpState extends State<signUp> {
         errortext = 'Sign up successfully Failed';
       });
     }
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -49,7 +98,7 @@ class _signUpState extends State<signUp> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
                   },
@@ -76,7 +125,7 @@ class _signUpState extends State<signUp> {
                       Row(),
                       Container(
                         child: Icon(
-                          Icons.car_crash_rounded,
+                          Icons.car_crash_sharp,
                           color: Colors.redAccent,
                           size: 100,
                         ),
@@ -219,27 +268,13 @@ class _signUpState extends State<signUp> {
                         height: 30,
                       ),
                       TextButton(
-                        onPressed: () async {
-                          if (email.text != '' &&
-                              name.text != '' &&
-                              password.text != '') {
-                            //signup
-                            signup();
-                          } else {
-                            setState(() {
-                              errortext = '';
-                              if (email.text == '') {
-                                errortext += 'Enter Email Id\n';
-                              }
-                              if (name.text == '') {
-                                errortext += 'Enter Name\n';
-                              }
-                              if (password.text == '') {
-                                errortext += 'Enter Password Id\n';
-                              }
-                            });
-                          }
-                        },
+                        onPressed: (loading == true)
+                            ? (null)
+                            : (() {
+                                if (validate() == true) {
+                                  signup();
+                                }
+                              }),
                         style: TextButton.styleFrom(
                           backgroundColor: maintheme,
                           foregroundColor: Colors.white,
@@ -252,17 +287,24 @@ class _signUpState extends State<signUp> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              height: 60,
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
+                            (loading == true)
+                                ? Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: (CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )),
+                                  )
+                                : (Container(
+                                    height: 60,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Sign Up",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ))
                           ],
                         ),
                       ),

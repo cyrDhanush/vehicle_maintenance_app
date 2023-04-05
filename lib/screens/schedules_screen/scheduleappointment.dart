@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vehicle_maintenance_app/commonvars.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleconfirmation.dart';
 
 class scheduleAppointment extends StatefulWidget {
-  const scheduleAppointment({Key? key}) : super(key: key);
+  final ServiceModel serviceModel;
+  const scheduleAppointment({Key? key, required this.serviceModel})
+      : super(key: key);
 
   @override
   State<scheduleAppointment> createState() => _scheduleAppointmentState();
@@ -18,34 +22,11 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
     'Tire',
     'Engine Check',
   ];
-  List months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
-  List days = [
-    'Sun',
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thur',
-    'Fri',
-    'Sat',
-    'Sun',
-  ];
 
   int? servicevalue;
   DateTime selecteddate = DateTime.now();
   TimeOfDay selectedtime = TimeOfDay.fromDateTime(DateTime.now());
+  TextEditingController notes = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -275,6 +256,7 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
                     ),
                     Container(
                       child: TextField(
+                        controller: notes,
                         keyboardType: TextInputType.multiline,
 
                         minLines: 5,
@@ -299,10 +281,27 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
             ),
             TextButton(
               onPressed: () {
+                if (servicevalue != null &&
+                    selecteddate != null &&
+                    selectedtime != null) {
+                  print(servicevalue);
+                  print(selecteddate.day);
+                  print(selectedtime);
+                  widget.serviceModel.servicename = services[servicevalue!];
+                  widget.serviceModel.day = selecteddate.day.toString();
+                  widget.serviceModel.month = (selecteddate.month).toString();
+                  widget.serviceModel.year = selecteddate.year.toString();
+                  widget.serviceModel.hours = selectedtime.hour.toString();
+                  widget.serviceModel.minutes = selectedtime.minute.toString();
+                  widget.serviceModel.notes = notes.text;
+                }
+                widget.serviceModel.printer();
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => scheduleConfirmation()));
+                        builder: (context) => scheduleConfirmation(
+                              serviceModel: widget.serviceModel,
+                            )));
               },
               style: TextButton.styleFrom(
                 backgroundColor: Colors.white,

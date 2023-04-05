@@ -54,8 +54,10 @@ Map finaldata = {
   },
   'services': {
     'servicekey': {
+      'carkey': 'carkey',
       'shopname': 'shopname',
       'servicename': 'servicename',
+      'serviceprice': 'serviceprice',
       'servicedate': 'servicedate',
       'servicetime': 'servicetime',
       'notes': 'notes of the service',

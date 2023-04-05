@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vehicle_maintenance_app/commonvars.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
 
 class scheduleConfirmation extends StatelessWidget {
-  const scheduleConfirmation({Key? key}) : super(key: key);
+  final ServiceModel serviceModel;
+  const scheduleConfirmation({Key? key, required this.serviceModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,10 @@ class scheduleConfirmation extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      "Oil Change at Jiffy Lube",
+                      // "Oil Change at Jiffy Lube",
+                      serviceModel.servicename! +
+                          ' at ' +
+                          serviceModel.shopname!,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -82,7 +89,14 @@ class scheduleConfirmation extends StatelessWidget {
                         Container(
                           width: 200,
                           child: Text(
-                            'Monday, April 8 at 5:30 PM',
+                            // 'Monday, April 8 at 5:30 PM',
+                            months[int.parse(serviceModel.month!)] +
+                                ' ' +
+                                serviceModel.day +
+                                ' at ' +
+                                serviceModel.hours +
+                                ':' +
+                                serviceModel.minutes,
                             style: TextStyle(
                               fontSize: 13,
                               color: darktext.withAlpha(100),

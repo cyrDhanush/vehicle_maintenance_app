@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulereview.dart';
 
 class scheduleShop extends StatefulWidget {
-  const scheduleShop({Key? key}) : super(key: key);
+  final ServiceModel serviceModel;
+  const scheduleShop({Key? key, required this.serviceModel}) : super(key: key);
 
   @override
   State<scheduleShop> createState() => _scheduleShopState();
@@ -94,8 +96,15 @@ class _scheduleShopState extends State<scheduleShop> {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
       child: ElevatedButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => scheduleReview()));
+          widget.serviceModel.shopname = 'shopname';
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => scheduleReview(
+                serviceModel: widget.serviceModel,
+              ),
+            ),
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,

@@ -1,11 +1,9 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
 import 'package:vehicle_maintenance_app/widgets/carcarousal.dart';
@@ -165,7 +163,11 @@ class scheduleAppointmentTile extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => scheduleShop()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => scheduleShop(
+                        serviceModel: ServiceModel(),
+                      )));
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,

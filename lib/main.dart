@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: LoginPage(),
       // home: homeParent(),
-      // home: addNewCar(),
-      home: scheduleShop(),
+      home: addNewCar(),
+      // home: scheduleShop(),
       // home: cardSelection(),
       // home: successfullScreen(),
     );

@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleappointment.dart';
 
 class scheduleReview extends StatelessWidget {
-  const scheduleReview({Key? key}) : super(key: key);
+  final ServiceModel serviceModel;
+  const scheduleReview({Key? key, required this.serviceModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +58,8 @@ class scheduleReview extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Jiffy Lube',
+                          // 'Jiffy Lube',
+                          serviceModel.shopname.toString(),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -106,7 +112,9 @@ class scheduleReview extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => scheduleAppointment()));
+                                builder: (context) => scheduleAppointment(
+                                      serviceModel: serviceModel,
+                                    )));
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white,

@@ -13,22 +13,35 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController passwordcontroller = TextEditingController();
   Authentication _authentication = Authentication();
 
   String errortext = '';
   bool obscurepassword = true;
+  bool loading = false;
+  bool remember = true;
 
   login() async {
-    if (email.text != '' && password.text != '') {
-      var result = await _authentication.loginUser(email.text, password.text);
+    String email, password;
+    setState(() {
+      loading = true;
+    });
+
+    email = emailcontroller.text;
+    password = passwordcontroller.text;
+    if (email != '' && password != '') {
+      var result = await _authentication.loginUser(email, password);
       if (result.runtimeType == UserCredential) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => homeParent()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => homeParent(),
+          ),
+        );
       } else if (result.toString().contains('invalid-email')) {
         setState(() {
-          errortext = 'Invalid Email Format';
+          errortext = 'Invalid email Format';
         });
       } else if (result.toString().contains('user-not-found')) {
         showDialog(
@@ -92,6 +105,9 @@ class _LoginPageState extends State<LoginPage> {
         });
       }
     }
+    setState(() {
+      loading = false;
+    });
   }
 
   bool rem = true;
@@ -135,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                         Row(),
                         Container(
                           child: Icon(
-                            Icons.car_crash_rounded,
+                            Icons.car_crash_sharp,
                             color: Colors.redAccent,
                             size: 100,
                           ),
@@ -157,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           height: 60,
                           child: TextField(
-                            controller: email,
+                            controller: emailcontroller,
                             style: TextStyle(
                               fontSize: 18,
                             ),
@@ -193,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Container(
                                 height: 60,
                                 child: TextField(
-                                  controller: password,
+                                  controller: passwordcontroller,
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -243,27 +259,27 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Row(
                           children: [
-                            GestureDetector(
-                              onTap: () {
+                            TextButton(
+                              onPressed: () {
                                 setState(() {
-                                  rem = !rem;
+                                  remember =
+                                      (remember == true) ? (false) : (true);
                                 });
                               },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.only(right: 15),
+                              ),
                               child: Row(
                                 children: [
                                   Checkbox(
-                                    value: rem,
+                                    value: remember,
                                     shape: CircleBorder(),
                                     activeColor: maintheme,
                                     checkColor: Colors.white,
-                                    onChanged: (res) {
-                                      setState(() {
-                                        rem = res!;
-                                      });
-                                    },
+                                    onChanged: (res) {},
                                   ),
                                   Text(
-                                    'Remember me',
+                                    'Remember Me',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 12,
@@ -286,14 +302,14 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         TextButton(
-                          onPressed: () {
-                            // Navigator.push(context,
-                            //     MaterialPageRoute(builder: (context) => homeParent()));
-                            login();
-                          },
+                          onPressed: (loading == true)
+                              ? (null)
+                              : (() {
+                                  login();
+                                }),
                           style: TextButton.styleFrom(
                             backgroundColor: maintheme,
                             foregroundColor: Colors.white,
@@ -306,17 +322,21 @@ class _LoginPageState extends State<LoginPage> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                height: 60,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Log in",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
+                              (loading == true)
+                                  ? (CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ))
+                                  : (Container(
+                                      height: 60,
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Log in",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    )),
                             ],
                           ),
                         ),

@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/data.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/services/user_services.dart';
+import 'package:vehicle_maintenance_app/widgets/loadingblock.dart';
 
 class addNewCar extends StatefulWidget {
   const addNewCar({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class addNewCar extends StatefulWidget {
 class _addNewCarState extends State<addNewCar> {
   String? carmaker;
   String? carmodel;
+  UserServices userServices = UserServices();
 
   @override
   void initState() {
@@ -50,7 +54,15 @@ class _addNewCarState extends State<addNewCar> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              loadingBlock(context: context);
+              await userServices.addnewcar(
+                carmaker: carmaker!,
+                carmodel: carmodel!,
+              );
+              Navigator.pop(context); // to pop dialog box
+              print('Successfull');
+            },
             icon: Icon(
               Icons.check_rounded,
               color: darktext,
