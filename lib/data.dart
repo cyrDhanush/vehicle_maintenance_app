@@ -1,28 +1,3 @@
-// 'Mahindra'
-// 'xuv300'
-// 'xuv500'
-// 'xuv700'
-// 'Thar'
-//
-// 'Tata'
-// 'Harrier'
-// 'Nexon'
-// 'Hexa'
-// 'Punch'
-//
-// 'Hyundai'
-// 'Crete'
-// 'xcent'
-// 'venue'
-// 'verna'
-//
-//
-// 'Honda'
-// 'amaze'
-// 'city'
-// 'accord'
-// 'civic'
-
 Map<String, dynamic> carMakers = {
   'Mahindra': [
     'XUV300',
@@ -48,4 +23,43 @@ Map<String, dynamic> carMakers = {
     'Accord',
     'Civic',
   ],
+};
+
+Map<String, String> carPhotos = {
+  'XUV300': 'xuv300.png',
+  'XUV500': 'xuv500.png',
+  'XUV700': 'xuv700.png',
+  'Thar': 'thar.webp',
+  'Harrier': 'harrier.png',
+  'Nexon': 'nexon.png',
+  'Hexa': 'hexa.png',
+  'Punch': 'punch.jpeg',
+  'Creta': 'creta.png',
+  'Xcent': 'xcent.png',
+  'Venue': 'venue.png',
+  'Verna': 'verna.png',
+  'Amaze': 'amaze.png',
+  'City': 'city.png',
+  'Accord': 'accord.png',
+  'Civic': 'civic.png',
+};
+
+Map finaldata = {
+  'name': 'dhanush',
+  'cars': {
+    'key': {
+      'carmaker': 'carmaker',
+      'carmodel': 'carmodel',
+    },
+  },
+  'services': {
+    'servicekey': {
+      'shopname': 'shopname',
+      'servicename': 'servicename',
+      'servicedate': 'servicedate',
+      'servicetime': 'servicetime',
+      'notes': 'notes of the service',
+      'paymentstatus': 'paymentstatus', //  completed, pending
+    },
+  },
 };

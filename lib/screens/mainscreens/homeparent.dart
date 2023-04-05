@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
 import 'package:vehicle_maintenance_app/screens/payment/billingmain.dart';
+import 'package:vehicle_maintenance_app/services/firebase.dart';
 
 class homeParent extends StatefulWidget {
   const homeParent({Key? key}) : super(key: key);
@@ -161,6 +162,9 @@ class _homeParentState extends State<homeParent> {
                   draweritem(
                     title: 'Log Out',
                     icon: Icons.logout_rounded,
+                    onPressed: () {
+                      print(firebaseAuth.toString());
+                    },
                   ),
                 ],
               ),
@@ -233,9 +237,14 @@ class _homeParentState extends State<homeParent> {
     );
   }
 
-  Widget draweritem({title = 'title', required IconData icon}) {
+  Widget draweritem(
+      {title = 'title', required IconData icon, Function? onPressed}) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        if (onPressed != null) {
+          onPressed();
+        }
+      },
       style: TextButton.styleFrom(
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(

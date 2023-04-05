@@ -66,40 +66,23 @@ class _addNewCarState extends State<addNewCar> {
             SizedBox(
               height: 20,
             ),
-            Text(
-              'Vehicle Photos',
-              style: subtitle,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Row(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: maintheme,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    side: BorderSide(
-                      width: 3,
-                      color: darktext,
-                    ),
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 25, horizontal: 50),
-                    decoration: BoxDecoration(),
-                    child: Icon(
-                      Icons.add,
-                      color: maintheme,
-                      size: 30,
-                    ),
-                  ),
+
+            Container(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  'assets/images/vehicles/' + carPhotos[carmodel!].toString(),
+                  fit: BoxFit.cover,
                 ),
-              ],
+              ),
+              // child: Text(carmodel!),
+              decoration: BoxDecoration(
+                color: Colors.black.withAlpha(50),
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
             SizedBox(
               height: 20,

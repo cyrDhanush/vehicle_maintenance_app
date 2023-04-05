@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "400806452717",
+    "project_id": "vechilemaintenance",
+    "storage_bucket": "vechilemaintenance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400806452717:android:5142324de61d007dd71be4",
+        "android_client_info": {
+          "package_name": "com.dhanush.vehicle_maintenance_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "400806452717-su6dqp9l963ut121eeqg1o80gu04obhu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk8JG_tgexOr--f71kwHzqcyKlnRecTAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "400806452717-su6dqp9l963ut121eeqg1o80gu04obhu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

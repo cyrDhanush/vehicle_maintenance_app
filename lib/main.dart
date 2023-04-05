@@ -12,12 +12,16 @@ import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleconfirm
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulereview.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulesuccess.dart';
+import 'package:vehicle_maintenance_app/screens/signup.dart';
 import 'package:vehicle_maintenance_app/screens/successfullscreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -42,7 +46,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: LoginPage(),
       // home: homeParent(),
-      home: addNewCar(),
+      // home: addNewCar(),
+      home: scheduleShop(),
       // home: cardSelection(),
       // home: successfullScreen(),
     );
