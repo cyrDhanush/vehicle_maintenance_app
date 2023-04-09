@@ -33,10 +33,10 @@ class billingMain extends StatelessWidget {
               height: 180,
               child: carCarousal(
                 items: [
-                  buildVehiclecard(),
-                  buildVehiclecard(),
-                  buildVehiclecard(),
-                  buildVehiclecard(),
+                  // buildVehiclecard(),
+                  // buildVehiclecard(),
+                  // buildVehiclecard(),
+                  // buildVehiclecard(),
                 ],
               ),
             ),

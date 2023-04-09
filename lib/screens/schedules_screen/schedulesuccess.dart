@@ -47,7 +47,9 @@ class scheduleSuccess extends StatelessWidget {
               ),
             ),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               style: OutlinedButton.styleFrom(
                 foregroundColor: maintheme,
                 side: BorderSide(

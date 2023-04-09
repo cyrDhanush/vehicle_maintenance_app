@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vehicle_maintenance_app/checkscreen.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/models/servicemodel.dart';
+import 'package:vehicle_maintenance_app/ongenerateroute.dart';
 import 'package:vehicle_maintenance_app/screens/addnewcar.dart';
 import 'package:vehicle_maintenance_app/screens/loginpage.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
@@ -44,12 +47,19 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      initialRoute: '/home',
+      onGenerateRoute: RouteGenerator.generateRoute,
       // home: LoginPage(),
       // home: homeParent(),
-      home: addNewCar(),
+      // home: scheduleShop(
+      //   serviceModel: ServiceModel(),
+      // ),
+      // home: addNewCar(),
       // home: scheduleShop(),
       // home: cardSelection(),
       // home: successfullScreen(),
+
+      // home: checkscreen(),
     );
   }
 }

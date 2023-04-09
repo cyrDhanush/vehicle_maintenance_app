@@ -61,6 +61,7 @@ class _addNewCarState extends State<addNewCar> {
                 carmodel: carmodel!,
               );
               Navigator.pop(context); // to pop dialog box
+              Navigator.pop(context); // to pop screen
               print('Successfull');
             },
             icon: Icon(

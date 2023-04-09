@@ -33,12 +33,7 @@ class _LoginPageState extends State<LoginPage> {
     if (email != '' && password != '') {
       var result = await _authentication.loginUser(email, password);
       if (result.runtimeType == UserCredential) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => homeParent(),
-          ),
-        );
+        Navigator.pushReplacementNamed(context, '/home');
       } else if (result.toString().contains('invalid-email')) {
         setState(() {
           errortext = 'Invalid email Format';
@@ -77,8 +72,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               OutlinedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => signUp()));
+                  Navigator.pushReplacementNamed(context, '/signup');
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: maintheme,
@@ -124,8 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => signUp()));
+                      Navigator.pushReplacementNamed(context, '/signup');
                     },
                     child: Text(
                       "Sign Up",

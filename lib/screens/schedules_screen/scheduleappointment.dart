@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/commonvars.dart';
+import 'package:vehicle_maintenance_app/data.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleconfirmation.dart';
@@ -15,14 +16,6 @@ class scheduleAppointment extends StatefulWidget {
 }
 
 class _scheduleAppointmentState extends State<scheduleAppointment> {
-  List services = [
-    'Washing',
-    'Cleaning',
-    'Lubricant',
-    'Tire',
-    'Engine Check',
-  ];
-
   int? servicevalue;
   DateTime selecteddate = DateTime.now();
   TimeOfDay selectedtime = TimeOfDay.fromDateTime(DateTime.now());
@@ -91,7 +84,7 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
                                 for (int i = 0; i < services.length; i++)
                                   DropdownMenuItem(
                                     value: i,
-                                    child: Text(services[i]),
+                                    child: Text(services.keys.elementAt(i)),
                                   ),
                               ],
                               value: servicevalue,
@@ -287,21 +280,22 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
                   print(servicevalue);
                   print(selecteddate.day);
                   print(selectedtime);
-                  widget.serviceModel.servicename = services[servicevalue!];
+                  widget.serviceModel.servicename =
+                      services.keys.elementAt(servicevalue!);
+                  widget.serviceModel.serviceprice =
+                      services.values.elementAt(servicevalue!).toString();
+
                   widget.serviceModel.day = selecteddate.day.toString();
                   widget.serviceModel.month = (selecteddate.month).toString();
                   widget.serviceModel.year = selecteddate.year.toString();
                   widget.serviceModel.hours = selectedtime.hour.toString();
                   widget.serviceModel.minutes = selectedtime.minute.toString();
                   widget.serviceModel.notes = notes.text;
+
+                  Navigator.pushNamed(context, '/scheduleconfirmation',
+                      arguments: widget.serviceModel);
                 }
                 widget.serviceModel.printer();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => scheduleConfirmation(
-                              serviceModel: widget.serviceModel,
-                            )));
               },
               style: TextButton.styleFrom(
                 backgroundColor: Colors.white,

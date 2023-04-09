@@ -1,15 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/commonvars.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
+import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulesuccess.dart';
+import 'package:vehicle_maintenance_app/services/user_services.dart';
+import 'package:vehicle_maintenance_app/widgets/loadingblock.dart';
 
 class scheduleConfirmation extends StatelessWidget {
   final ServiceModel serviceModel;
-  const scheduleConfirmation({Key? key, required this.serviceModel})
+  scheduleConfirmation({Key? key, required this.serviceModel})
       : super(key: key);
-
+  final UserServices userServices = UserServices();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +70,8 @@ class scheduleConfirmation extends StatelessWidget {
                       // "Oil Change at Jiffy Lube",
                       serviceModel.servicename! +
                           ' at ' +
-                          serviceModel.shopname!,
+                          serviceModel.shopmodel!.shopname,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -76,10 +82,9 @@ class scheduleConfirmation extends StatelessWidget {
                       height: 20,
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: 50,
-                        ),
                         iconMaker(
                           iconData: CupertinoIcons.clock,
                         ),
@@ -87,7 +92,7 @@ class scheduleConfirmation extends StatelessWidget {
                           width: 20,
                         ),
                         Container(
-                          width: 200,
+                          width: 250,
                           child: Text(
                             // 'Monday, April 8 at 5:30 PM',
                             months[int.parse(serviceModel.month!)] +
@@ -110,10 +115,9 @@ class scheduleConfirmation extends StatelessWidget {
                       height: 20,
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: 50,
-                        ),
                         iconMaker(
                           iconData: Icons.location_on_outlined,
                         ),
@@ -121,9 +125,12 @@ class scheduleConfirmation extends StatelessWidget {
                           width: 20,
                         ),
                         Container(
-                          width: 200,
+                          width: 250,
                           child: Text(
-                            'Jiffy Lube\n756, Barrington Road,\nHanover Park',
+                            // 'Jiffy Lube\n756, Barrington Road,\nHanover Park',
+                            serviceModel.shopmodel!.shopname +
+                                '\n' +
+                                serviceModel.shopmodel!.shopaddress,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 13,
@@ -209,7 +216,19 @@ class scheduleConfirmation extends StatelessWidget {
             ),
             Spacer(),
             TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                loadingBlock(context: context);
+                await userServices.addSchedule(serviceModel: serviceModel);
+                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/home',
+                  ModalRoute.withName('/'),
+                );
+                Navigator.pushNamed(context, '/schedulesuccess');
+                // removing all from stack and
+                // pushing home under schedule succes screen
+              },
               style: TextButton.styleFrom(
                 backgroundColor: darktext,
                 foregroundColor: Colors.white,

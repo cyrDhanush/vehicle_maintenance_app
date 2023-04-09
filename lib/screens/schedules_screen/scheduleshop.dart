@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vehicle_maintenance_app/data.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/models/servicemodel.dart';
+import 'package:vehicle_maintenance_app/models/shop_model.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulereview.dart';
 
@@ -67,22 +69,15 @@ class _scheduleShopState extends State<scheduleShop> {
               height: 10,
             ),
             Expanded(
-              child: SingleChildScrollView(
+              child: ListView.builder(
                 physics: BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    shopTile(),
-                    shopTile(),
-                    shopTile(),
-                    shopTile(),
-                    shopTile(),
-                    shopTile(),
-                    shopTile(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ],
-                ),
+                padding: EdgeInsets.only(bottom: 20),
+                itemCount: shopdata.length,
+                itemBuilder: (context, i) {
+                  return shopTile(
+                    shopmodel: shopdata[i],
+                  );
+                },
               ),
             ),
           ],
@@ -91,20 +86,14 @@ class _scheduleShopState extends State<scheduleShop> {
     );
   }
 
-  Widget shopTile() {
+  Widget shopTile({required ShopModel shopmodel}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
       child: ElevatedButton(
         onPressed: () {
-          widget.serviceModel.shopname = 'shopname';
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => scheduleReview(
-                serviceModel: widget.serviceModel,
-              ),
-            ),
-          );
+          widget.serviceModel.shopmodel = shopmodel;
+          Navigator.pushNamed(context, '/schedulereview',
+              arguments: widget.serviceModel);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
@@ -128,7 +117,8 @@ class _scheduleShopState extends State<scheduleShop> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Jiffy Lube',
+                      // 'Jiffy Lube',
+                      shopmodel.shopname,
                       style: subtitle.copyWith(
                         fontSize: 15,
                       ),
@@ -143,7 +133,8 @@ class _scheduleShopState extends State<scheduleShop> {
                       height: 5,
                     ),
                     Text(
-                      '756, Barrington Road, Hanover Park 5245',
+                      // '756, Barrington Road, Hanover Park 5245',
+                      shopmodel.shopaddress,
                       style: subtitle.copyWith(
                         fontSize: 12,
                         color: darktext.withAlpha(100),

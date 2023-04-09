@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:vehicle_maintenance_app/data.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 
 class carCarousal extends StatefulWidget {
@@ -35,8 +36,9 @@ class _carCarousalState extends State<carCarousal> {
                   enlargeCenterPage: true,
                   initialPage: 0,
                   scrollPhysics: BouncingScrollPhysics(),
-                  onPageChanged: (int page, s) {
-                    widget.setCurrentpage ?? (page);
+                  onPageChanged: (int page, reason) {
+                    widget.setCurrentpage!(page);
+                    print('working');
                     setState(() {
                       currentpage = page;
                     });
@@ -78,12 +80,17 @@ class _carCarousalState extends State<carCarousal> {
 }
 
 class buildVehiclecard extends StatelessWidget {
-  const buildVehiclecard({Key? key}) : super(key: key);
+  final String carmaker;
+  final String carmodel;
+  const buildVehiclecard(
+      {Key? key, required this.carmaker, required this.carmodel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print(carPhotos[carmodel].toString());
     return ClipRRect(
-      borderRadius: BorderRadius.circular(22),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
         height: 180,
         width: MediaQuery.of(context).size.width - 30,
@@ -124,7 +131,7 @@ class buildVehiclecard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Toyota Prius 2013',
+                      carmaker + ' ' + carmodel,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -136,10 +143,18 @@ class buildVehiclecard extends StatelessWidget {
                       children: [
                         Container(
                           height: 100,
-                          width: 150,
+                          width: 180,
                           decoration: BoxDecoration(
                             color: Colors.white.withAlpha(150),
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              'assets/images/vehicles/' +
+                                  carPhotos[carmodel].toString(),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         Column(

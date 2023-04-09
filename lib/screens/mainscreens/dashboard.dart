@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
@@ -6,6 +7,7 @@ import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
+import 'package:vehicle_maintenance_app/services/user_services.dart';
 import 'package:vehicle_maintenance_app/widgets/carcarousal.dart';
 
 class Dashboard extends StatefulWidget {
@@ -17,13 +19,32 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int totalpages = 3;
+  UserServices userServices = UserServices();
+  List<String> carkeys = [];
   int currentpage = 0;
+  bool refreshbottom = false;
   void setCurrentpage(int page) {
     setState(() {
       currentpage = page;
     });
     print(currentpage.toString() + 'from dashboard');
+    print(carkeys.length.toString());
+    print(carkeys);
+  }
+
+  Future<QuerySnapshot> getcardata() async {
+    QuerySnapshot data = await userServices.getcars();
+
+    carkeys.clear();
+    for (DocumentSnapshot snapshot in data.docs) {
+      carkeys.add(snapshot.id.toString());
+    }
+    if (refreshbottom == false) {
+      // to set the option visible
+      refreshbottom = true;
+      setState(() {});
+    }
+    return data;
   }
 
   @override
@@ -93,45 +114,108 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
             ),
-            Container(
-              height: 180,
-              width: MediaQuery.of(context).size.width,
-              child: carCarousal(
-                setCurrentpage: setCurrentpage,
-                items: [
-                  buildVehiclecard(),
-                  buildVehiclecard(),
-                  buildVehiclecard(),
-                ],
-              ),
-            ),
             Expanded(
-              child: Container(
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 15,
+              child: FutureBuilder(
+                future: getcardata(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      children: [
+                        Container(
+                          height: 180,
+                          width: MediaQuery.of(context).size.width,
+                          child: carCarousal(
+                            setCurrentpage: setCurrentpage,
+                            items: [
+                              for (DocumentSnapshot documentsnapshot
+                                  in snapshot.data!.docs)
+                                buildVehiclecard(
+                                  carmaker: documentsnapshot.get('carmaker'),
+                                  carmodel: documentsnapshot.get('carmodel'),
+                                ),
+                              addnewvehicle(),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            child: Visibility(
+                              visible: (currentpage == carkeys.length)
+                                  ? (false)
+                                  : (true),
+                              child: SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    paymentTile(
+                                      carkey: (currentpage == carkeys.length)
+                                          ? (carkeys[currentpage - 1])
+                                          : (carkeys[currentpage]),
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    appointmentTile(),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    scheduleAppointmentTile(
+                                      carkey: (currentpage == carkeys.length)
+                                          ? (carkeys[currentpage - 1])
+                                          : (carkeys[currentpage]),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Container(
+                      height: 100,
+                      width: 100,
+                      child: FittedBox(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
                       ),
-                      paymentTile(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      appointmentTile(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      scheduleAppointmentTile(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
+                    );
+                  }
+                },
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  addnewvehicle() {
+    return Container(
+      height: 180,
+      width: MediaQuery.of(context).size.width - 30,
+      decoration: BoxDecoration(
+        color: maintheme.withAlpha(50),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Center(
+        child: FloatingActionButton.extended(
+          onPressed: () async {
+            await Navigator.pushNamed(context, '/addnewvehicle');
+            setState(() {});
+          },
+          backgroundColor: maintheme.withAlpha(200),
+          foregroundColor: Colors.white,
+          label: Text('Add New Vehicle'),
+          icon: Icon(Icons.add),
         ),
       ),
     );
@@ -154,7 +238,9 @@ class _DashboardState extends State<Dashboard> {
 }
 
 class scheduleAppointmentTile extends StatelessWidget {
-  const scheduleAppointmentTile({Key? key}) : super(key: key);
+  final String carkey;
+  const scheduleAppointmentTile({Key? key, required this.carkey})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -162,12 +248,8 @@ class scheduleAppointmentTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: globalpadding),
       child: ElevatedButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => scheduleShop(
-                        serviceModel: ServiceModel(),
-                      )));
+          Navigator.pushNamed(context, '/scheduleshop',
+              arguments: ServiceModel(carkey: carkey));
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
@@ -362,14 +444,22 @@ class appointmentTile extends StatelessWidget {
 }
 
 class paymentTile extends StatefulWidget {
-  const paymentTile({Key? key}) : super(key: key);
+  final String carkey;
+  const paymentTile({Key? key, required this.carkey}) : super(key: key);
 
   @override
   State<paymentTile> createState() => _paymentTileState();
 }
 
 class _paymentTileState extends State<paymentTile> {
+  UserServices userServices = UserServices();
   bool expanded = false;
+  int totalcost = 0;
+  gettotalcost() async {
+    totalcost = await userServices.getunpaidservicetotal(carkey: widget.carkey);
+    return totalcost;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -396,151 +486,180 @@ class _paymentTileState extends State<paymentTile> {
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
           height: (expanded) ? (180) : (100),
           child: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  height: 100,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Stack(
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              child: FutureBuilder(
+                future: gettotalcost(),
+                builder: (context, snapshot) {
+                  print(snapshot.connectionState.toString());
+                  if (snapshot.hasData) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              iconMaker(
-                                iconData: Icons.notifications_rounded,
-                              ),
-                              Positioned(
-                                right: 3,
-                                top: 3,
-                                child: Container(
-                                  height: 7,
-                                  width: 7,
-                                  decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(20)),
-                                ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      iconMaker(
+                                        iconData: Icons.notifications_rounded,
+                                      ),
+                                      Positioned(
+                                        right: 3,
+                                        top: 3,
+                                        child: Container(
+                                          height: 7,
+                                          width: 7,
+                                          decoration: BoxDecoration(
+                                              color: (int.parse(snapshot.data
+                                                          .toString()) >
+                                                      0)
+                                                  ? (Colors.red)
+                                                  : (Colors.transparent),
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "PAYMENTS DUE",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: (expanded)
+                                                ? (Colors.black.withAlpha(100))
+                                                : (Colors.black),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        (expanded)
+                                            ? (Text(
+                                                'Total: ₹ ' +
+                                                    snapshot.data.toString(),
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ))
+                                            : (Text(
+                                                (int.parse(snapshot.data
+                                                            .toString()) >
+                                                        0)
+                                                    ? ("You have payments due")
+                                                    : ("You have no payments due"),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        expanded = !expanded;
+                                      });
+                                    },
+                                    icon: AnimatedRotation(
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.fastLinearToSlowEaseIn,
+                                      turns: ((expanded) ? (1) : (0)) / 4,
+                                      child: Icon(
+                                        Icons.chevron_right_rounded,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "PAYMENTS DUE",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: (expanded)
-                                        ? (Colors.black.withAlpha(100))
-                                        : (Colors.black),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                (expanded)
-                                    ? (Text(
-                                        'Total: 65\$ ',
+                        ),
+                        ClipRect(
+                          child: (expanded)
+                              ? (Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 4,
+                                      child: Text(
+                                        'Oil Change, standard checkup at Luffy Lube',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),
-                                      ))
-                                    : (Text(
-                                        "You have no payments due",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: OutlinedButton(
+                                        onPressed: () {},
+                                        style: OutlinedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: Colors.red,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          side: BorderSide(
+                                            color: Colors.red,
+                                            width: 1,
+                                          ),
                                         ),
-                                      )),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                expanded = !expanded;
-                              });
-                            },
-                            icon: AnimatedRotation(
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.fastLinearToSlowEaseIn,
-                              turns: ((expanded) ? (1) : (0)) / 4,
-                              child: Icon(
-                                Icons.chevron_right_rounded,
-                                size: 30,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                ClipRect(
-                  child: (expanded)
-                      ? (Row(
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                'Oil Change, standard checkup at Luffy Lube',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: OutlinedButton(
-                                onPressed: () {},
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.red,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  side: BorderSide(
-                                    color: Colors.red,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Text(
-                                  'Review',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ))
-                      : (Container()),
-                ),
-              ],
-            ),
-          ),
+                                        child: Text(
+                                          'Review',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                              : (Container()),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(),
+                        LinearProgressIndicator(),
+                      ],
+                    );
+                  }
+                },
+              )),
         ),
       ),
     );

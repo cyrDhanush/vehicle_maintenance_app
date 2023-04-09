@@ -1,6 +1,10 @@
+import 'package:vehicle_maintenance_app/models/shop_model.dart';
+
 class ServiceModel {
-  String? shopname;
+  String? carkey;
+  ShopModel? shopmodel;
   String? servicename;
+  String? serviceprice;
   String? day;
   String? month;
   String? year;
@@ -10,8 +14,10 @@ class ServiceModel {
   String? paymentstatus;
 
   ServiceModel({
-    this.shopname,
+    this.carkey,
+    this.shopmodel,
     this.servicename,
+    this.serviceprice,
     this.day,
     this.month,
     this.year,
@@ -22,8 +28,10 @@ class ServiceModel {
   });
 
   void printer() {
-    print(this.shopname);
+    print(this.carkey);
+    print(this.shopmodel);
     print(this.servicename);
+    print(this.serviceprice);
     print(this.day);
     print(this.month);
     print(this.year);

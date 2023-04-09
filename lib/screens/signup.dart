@@ -4,14 +4,14 @@ import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/loginpage.dart';
 import 'package:vehicle_maintenance_app/services/user_auth.dart';
 
-class signUp extends StatefulWidget {
-  const signUp({Key? key}) : super(key: key);
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<signUp> createState() => _signUpState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _signUpState extends State<signUp> {
+class _SignUpState extends State<SignUp> {
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -71,8 +71,7 @@ class _signUpState extends State<signUp> {
       //success
       await showSuccess();
 
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+      Navigator.pushReplacementNamed(context, '/login');
     } else if (result.toString().contains('email-already-in-use')) {
       setState(() {
         errortext = 'Email Already in Use\nTry Logging in';
@@ -99,8 +98,7 @@ class _signUpState extends State<signUp> {
               children: [
                 TextButton(
                   onPressed: () async {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
+                    Navigator.pushReplacementNamed(context, '/login');
                   },
                   child: Text(
                     "Login",

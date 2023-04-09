@@ -57,13 +57,15 @@ class scheduleReview extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          // 'Jiffy Lube',
-                          serviceModel.shopname.toString(),
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: darktext,
+                        Expanded(
+                          child: Text(
+                            // 'Jiffy Lube',
+                            serviceModel.shopmodel!.shopname.toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: darktext,
+                            ),
                           ),
                         ),
                         IconButton(
@@ -83,7 +85,8 @@ class scheduleReview extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      '756, Barrington Road, Hanover Park 5245',
+                      // '756, Barrington Road, Hanover Park 5245',
+                      serviceModel.shopmodel!.shopaddress,
                       style: subtitle.copyWith(
                         fontSize: 13,
                         color: darktext.withAlpha(100),
@@ -94,7 +97,8 @@ class scheduleReview extends StatelessWidget {
                     ),
                     linkfunc(
                       icon: Icons.call_outlined,
-                      text: 'Call 1234567890',
+                      text: 'Call  ' +
+                          serviceModel.shopmodel!.shopphone.toString(),
                     ),
                     linkfunc(
                       icon: Icons.location_on_outlined,
@@ -109,12 +113,8 @@ class scheduleReview extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => scheduleAppointment(
-                                      serviceModel: serviceModel,
-                                    )));
+                        Navigator.pushNamed(context, '/scheduleappointment',
+                            arguments: serviceModel);
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white,
