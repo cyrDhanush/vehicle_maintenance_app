@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
+import 'package:vehicle_maintenance_app/screens/mainscreens/schedulescreen.dart';
 import 'package:vehicle_maintenance_app/screens/payment/billingmain.dart';
 import 'package:vehicle_maintenance_app/services/constants.dart';
 
@@ -54,13 +55,14 @@ class _homeParentState extends State<homeParent> {
         },
         children: [
           billingMain(),
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              'Schedule',
-              style: dummystyle,
-            ),
-          ),
+          // Container(
+          //   alignment: Alignment.center,
+          //   child: Text(
+          //     'Schedule',
+          //     style: dummystyle,
+          //   ),
+          // ),
+          scheduleScreen(),
           Dashboard(mykey: _globalKey),
           Container(
             alignment: Alignment.center,

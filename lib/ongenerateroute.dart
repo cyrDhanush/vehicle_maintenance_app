@@ -10,6 +10,7 @@ import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulereview.
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulesuccess.dart';
 import 'package:vehicle_maintenance_app/screens/signup.dart';
+import 'package:vehicle_maintenance_app/screens/upcoming_appointments.dart';
 
 class RouteGenerator {
   static Route generateRoute(RouteSettings settings) {
@@ -30,10 +31,16 @@ class RouteGenerator {
       case '/addnewvehicle':
         return MaterialPageRoute(builder: (_) => addNewCar());
 
+      case '/upcomingappointments':
+        if (args is String) {
+          return MaterialPageRoute(
+              builder: (_) => upcomingAppointmentScreen(carkey: args));
+        } else
+          return errorroute();
+
       //scheduling routes
       case '/scheduleshop':
         if (args is ServiceModel) {
-          args.printer();
           return MaterialPageRoute(
               builder: (_) => scheduleShop(serviceModel: args));
         } else

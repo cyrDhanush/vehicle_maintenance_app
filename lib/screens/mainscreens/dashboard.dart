@@ -158,7 +158,11 @@ class _DashboardState extends State<Dashboard> {
                                     SizedBox(
                                       height: 15,
                                     ),
-                                    appointmentTile(),
+                                    appointmentTile(
+                                      carkey: (currentpage == carkeys.length)
+                                          ? (carkeys[currentpage - 1])
+                                          : (carkeys[currentpage]),
+                                    ),
                                     SizedBox(
                                       height: 15,
                                     ),
@@ -355,14 +359,18 @@ class iconMaker extends StatelessWidget {
 }
 
 class appointmentTile extends StatelessWidget {
-  const appointmentTile({Key? key}) : super(key: key);
+  final String carkey;
+  const appointmentTile({Key? key, required this.carkey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: globalpadding),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/upcomingappointments',
+              arguments: carkey);
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           foregroundColor: maintheme,

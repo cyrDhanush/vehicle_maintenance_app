@@ -37,6 +37,10 @@ class UserServices {
     return querySnapshot;
   }
 
+  // Future<DocumentSnapshot> getcarname({required String carkey}) async{
+  //   // userbase.doc('userkey').collection('cars').doc(carkey)
+  // }
+
   Future<QuerySnapshot> getserviceswithcarkey({required String carkey}) async {
     QuerySnapshot snapshot = await userbase
         .doc(userkey)
@@ -46,17 +50,33 @@ class UserServices {
     return snapshot;
   }
 
-  getunpaidservicetotal({required String carkey}) async {
+  Future<QuerySnapshot> getunpaidservicewithcarkey(
+      {required String carkey}) async {
     QuerySnapshot querySnapshot = await userbase
         .doc(userkey)
         .collection('services')
         .where('carkey', isEqualTo: carkey)
         .where('paymentstatus', isEqualTo: 'pending')
         .get();
+    return querySnapshot;
+  }
+
+  Future<int> getunpaidservicetotal({required String carkey}) async {
+    QuerySnapshot querySnapshot =
+        await getunpaidservicewithcarkey(carkey: carkey);
     int totalcost = 0;
     for (DocumentSnapshot snapshot in querySnapshot.docs) {
       totalcost += int.parse(snapshot.get('serviceprice'));
     }
     return totalcost;
+  }
+
+  getunpaidservicewithuserkey() async {
+    QuerySnapshot querySnapshot = await userbase
+        .doc(userkey)
+        .collection('services')
+        .where('paymentstatus', isEqualTo: 'pending')
+        .get();
+    return querySnapshot;
   }
 }

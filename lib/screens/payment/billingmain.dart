@@ -11,6 +11,7 @@ class billingMain extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,
         scrolledUnderElevation: 0,
