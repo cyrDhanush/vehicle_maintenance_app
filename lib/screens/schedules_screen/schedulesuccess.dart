@@ -15,6 +15,7 @@ class scheduleSuccess extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
+        automaticallyImplyLeading: false,
         scrolledUnderElevation: 0,
         title: Text(
           "Confirmation",

@@ -9,6 +9,7 @@ import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
 import 'package:vehicle_maintenance_app/services/user_services.dart';
 import 'package:vehicle_maintenance_app/widgets/carcarousal.dart';
+import 'package:vehicle_maintenance_app/widgets/loadingblock.dart';
 
 class Dashboard extends StatefulWidget {
   final GlobalKey<ScaffoldState> mykey;
@@ -118,7 +119,7 @@ class _DashboardState extends State<Dashboard> {
               child: FutureBuilder(
                 future: getcardata(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.hasData && snapshot.data!.size != 0) {
                     return Column(
                       children: [
                         Container(
@@ -129,9 +130,42 @@ class _DashboardState extends State<Dashboard> {
                             items: [
                               for (DocumentSnapshot documentsnapshot
                                   in snapshot.data!.docs)
-                                buildVehiclecard(
-                                  carmaker: documentsnapshot.get('carmaker'),
-                                  carmodel: documentsnapshot.get('carmodel'),
+                                Stack(
+                                  children: [
+                                    buildVehiclecard(
+                                      carmaker:
+                                          documentsnapshot.get('carmaker'),
+                                      carmodel:
+                                          documentsnapshot.get('carmodel'),
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.delete_forever_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () async {
+                                          bool? result =
+                                              await getdeleteconfirmation(
+                                                  context);
+                                          print(result);
+                                          if (result == true) {
+                                            loadingBlock(context: context);
+                                            await userServices.deleteCar(
+                                              carkey: (currentpage ==
+                                                      carkeys.length)
+                                                  ? (carkeys[currentpage - 1])
+                                                  : (carkeys[currentpage]),
+                                            );
+                                            Navigator.pop(context);
+                                            setState(() {});
+                                          }
+                                        },
+                                      ),
+                                    )
+                                  ],
                                 ),
                               addnewvehicle(),
                             ],
@@ -182,6 +216,19 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ],
                     );
+                  } else if (snapshot.hasData && snapshot.data!.size == 0) {
+                    return Center(
+                      child: FloatingActionButton.extended(
+                        onPressed: () async {
+                          await Navigator.pushNamed(context, '/addnewvehicle');
+                          setState(() {});
+                        },
+                        backgroundColor: maintheme.withAlpha(200),
+                        foregroundColor: Colors.white,
+                        label: Text('Add New Vehicle'),
+                        icon: Icon(Icons.add),
+                      ),
+                    );
                   } else {
                     return Container(
                       height: 100,
@@ -200,6 +247,38 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  getdeleteconfirmation(context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Delete'),
+            content: Text('Do you want to delete this car?'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Cancel"),
+              ),
+              FilledButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
+                child: Text('Delete'),
+              ),
+            ],
+          );
+        });
   }
 
   addnewvehicle() {
@@ -369,7 +448,7 @@ class appointmentTile extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           Navigator.pushNamed(context, '/upcomingappointments',
-              arguments: carkey);
+              arguments: [carkey, '']);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
@@ -463,9 +542,17 @@ class _paymentTileState extends State<paymentTile> {
   UserServices userServices = UserServices();
   bool expanded = false;
   int totalcost = 0;
-  gettotalcost() async {
-    totalcost = await userServices.getunpaidservicetotal(carkey: widget.carkey);
-    return totalcost;
+  getsnapshotlist() async {
+    totalcost = 0;
+    print('made 0');
+    List<DocumentSnapshot> snapshots = [];
+    QuerySnapshot querySnapshot =
+        await userServices.getunpaidservicewithcarkey(carkey: widget.carkey);
+    for (DocumentSnapshot doc in querySnapshot.docs) {
+      snapshots.add(doc);
+      totalcost += int.parse(doc.get('serviceprice'));
+    }
+    return snapshots;
   }
 
   @override
@@ -497,9 +584,8 @@ class _paymentTileState extends State<paymentTile> {
               physics: NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               child: FutureBuilder(
-                future: gettotalcost(),
+                future: getsnapshotlist(),
                 builder: (context, snapshot) {
-                  print(snapshot.connectionState.toString());
                   if (snapshot.hasData) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -524,9 +610,7 @@ class _paymentTileState extends State<paymentTile> {
                                           height: 7,
                                           width: 7,
                                           decoration: BoxDecoration(
-                                              color: (int.parse(snapshot.data
-                                                          .toString()) >
-                                                      0)
+                                              color: (totalcost > 0)
                                                   ? (Colors.red)
                                                   : (Colors.transparent),
                                               borderRadius:
@@ -561,7 +645,7 @@ class _paymentTileState extends State<paymentTile> {
                                         (expanded)
                                             ? (Text(
                                                 'Total: ₹ ' +
-                                                    snapshot.data.toString(),
+                                                    totalcost.toString(),
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -569,9 +653,7 @@ class _paymentTileState extends State<paymentTile> {
                                                 ),
                                               ))
                                             : (Text(
-                                                (int.parse(snapshot.data
-                                                            .toString()) >
-                                                        0)
+                                                (totalcost > 0)
                                                     ? ("You have payments due")
                                                     : ("You have no payments due"),
                                                 style: TextStyle(
@@ -628,7 +710,14 @@ class _paymentTileState extends State<paymentTile> {
                                     Expanded(
                                       flex: 2,
                                       child: OutlinedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, '/upcomingappointments',
+                                              arguments: [
+                                                widget.carkey,
+                                                'Payment Dues'
+                                              ]);
+                                        },
                                         style: OutlinedButton.styleFrom(
                                           backgroundColor: Colors.white,
                                           foregroundColor: Colors.red,

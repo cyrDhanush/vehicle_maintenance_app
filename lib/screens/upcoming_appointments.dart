@@ -4,11 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/services/user_services.dart';
-import 'package:vehicle_maintenance_app/widgets/scheduletile.dart';
+import 'package:vehicle_maintenance_app/widgets/servicetile.dart';
 
 class upcomingAppointmentScreen extends StatefulWidget {
   final String carkey;
-  upcomingAppointmentScreen({Key? key, this.carkey = 'IgoC6hm8VmVNKjlleTET'})
+  final String title;
+  upcomingAppointmentScreen(
+      {Key? key,
+      this.carkey = 'IgoC6hm8VmVNKjlleTET',
+      this.title = 'Upcoming Appointments'})
       : super(key: key);
 
   @override
@@ -21,7 +25,7 @@ class _upcomingAppointmentScreenState extends State<upcomingAppointmentScreen> {
   final UserServices userServices = UserServices();
   Future<List<DocumentSnapshot>> getdata() async {
     QuerySnapshot querySnapshot =
-        await userServices.getserviceswithcarkey(carkey: widget.carkey);
+        await userServices.getunpaidservicewithcarkey(carkey: widget.carkey);
     List<DocumentSnapshot> documentsnapshots = [];
     totalcost = 0;
     for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
@@ -56,7 +60,7 @@ class _upcomingAppointmentScreenState extends State<upcomingAppointmentScreen> {
           ),
         ),
         title: Text(
-          "Upcoming Appointments",
+          (widget.title == '') ? ("Upcoming Appointments") : (widget.title),
           style: TextStyle(
             color: darktext,
             fontWeight: FontWeight.bold,
@@ -74,13 +78,13 @@ class _upcomingAppointmentScreenState extends State<upcomingAppointmentScreen> {
                         physics: BouncingScrollPhysics(),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, i) {
-                          return scheduleTile(
+                          return serviceTile(
                             documentSnapshot: snapshot.data![i],
                           );
                         }),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -96,6 +100,34 @@ class _upcomingAppointmentScreenState extends State<upcomingAppointmentScreen> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/paymentscreen',
+                              arguments: snapshot.data!,
+                            );
+                          },
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            side: BorderSide(
+                              color: Colors.red,
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            'Pay All',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                       ],

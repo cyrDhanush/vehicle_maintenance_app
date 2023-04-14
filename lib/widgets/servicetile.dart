@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 
-class scheduleTile extends StatelessWidget {
+class serviceTile extends StatelessWidget {
   final DocumentSnapshot documentSnapshot;
-  const scheduleTile({Key? key, required this.documentSnapshot})
+  const serviceTile({Key? key, required this.documentSnapshot})
       : super(key: key);
 
   @override

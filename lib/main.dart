@@ -9,14 +9,14 @@ import 'package:vehicle_maintenance_app/screens/loginpage.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/payment/billingmain.dart';
-import 'package:vehicle_maintenance_app/screens/payment/cardselection.dart';
+import 'package:vehicle_maintenance_app/screens/payment/paymentscreen.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleappointment.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleconfirmation.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulereview.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/scheduleshop.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulesuccess.dart';
 import 'package:vehicle_maintenance_app/screens/signup.dart';
-import 'package:vehicle_maintenance_app/screens/successfullscreen.dart';
+import 'package:vehicle_maintenance_app/screens/payment/paymentsuccessfull.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:vehicle_maintenance_app/screens/upcoming_appointments.dart';
 
@@ -49,6 +49,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute: '/home',
+      // initialRoute: '/cardselection',
       onGenerateRoute: RouteGenerator.generateRoute,
       // home: LoginPage(),
       // home: homeParent(),

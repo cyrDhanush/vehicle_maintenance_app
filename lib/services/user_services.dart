@@ -33,13 +33,8 @@ class UserServices {
   Future<QuerySnapshot> getcars() async {
     QuerySnapshot querySnapshot =
         await userbase.doc(userkey).collection('cars').get();
-    print(querySnapshot.docs);
     return querySnapshot;
   }
-
-  // Future<DocumentSnapshot> getcarname({required String carkey}) async{
-  //   // userbase.doc('userkey').collection('cars').doc(carkey)
-  // }
 
   Future<QuerySnapshot> getserviceswithcarkey({required String carkey}) async {
     QuerySnapshot snapshot = await userbase
@@ -48,6 +43,12 @@ class UserServices {
         .where('carkey', isEqualTo: carkey)
         .get();
     return snapshot;
+  }
+
+  Future<QuerySnapshot> getserviceswithuserkey() async {
+    QuerySnapshot querySnapshot =
+        await userbase.doc(userkey).collection('services').get();
+    return querySnapshot;
   }
 
   Future<QuerySnapshot> getunpaidservicewithcarkey(
@@ -61,22 +62,28 @@ class UserServices {
     return querySnapshot;
   }
 
-  Future<int> getunpaidservicetotal({required String carkey}) async {
-    QuerySnapshot querySnapshot =
-        await getunpaidservicewithcarkey(carkey: carkey);
-    int totalcost = 0;
-    for (DocumentSnapshot snapshot in querySnapshot.docs) {
-      totalcost += int.parse(snapshot.get('serviceprice'));
-    }
-    return totalcost;
-  }
-
-  getunpaidservicewithuserkey() async {
+  Future<QuerySnapshot> getunpaidservicewithuserkey() async {
     QuerySnapshot querySnapshot = await userbase
         .doc(userkey)
         .collection('services')
         .where('paymentstatus', isEqualTo: 'pending')
         .get();
     return querySnapshot;
+  }
+
+  deleteCar({required String carkey}) async {
+    // to delete document from car collection
+    await userbase.doc(userkey).collection('cars').doc(carkey).delete();
+    print('user deleted');
+    // to delete its services
+    QuerySnapshot querySnapshot = await userbase
+        .doc(userkey)
+        .collection('services')
+        .where('carkey', isEqualTo: carkey)
+        .get();
+    for (DocumentSnapshot doc in querySnapshot.docs) {
+      await userbase.doc(userkey).collection('services').doc(doc.id).delete();
+    }
+    print('services deleted');
   }
 }

@@ -37,8 +37,9 @@ class _carCarousalState extends State<carCarousal> {
                   initialPage: 0,
                   scrollPhysics: BouncingScrollPhysics(),
                   onPageChanged: (int page, reason) {
-                    widget.setCurrentpage!(page);
-                    print('working');
+                    if (widget.setCurrentpage != null) {
+                      widget.setCurrentpage!(page);
+                    }
                     setState(() {
                       currentpage = page;
                     });

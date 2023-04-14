@@ -1,10 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
+import 'package:vehicle_maintenance_app/screens/payment/paymentwidgets/paymentduesection.dart';
+import 'package:vehicle_maintenance_app/screens/payment/paymentwidgets/paymenttiles.dart';
+import 'package:vehicle_maintenance_app/services/user_services.dart';
 import 'package:vehicle_maintenance_app/widgets/carcarousal.dart';
 
-class billingMain extends StatelessWidget {
+class billingMain extends StatefulWidget {
   const billingMain({Key? key}) : super(key: key);
+
+  @override
+  State<billingMain> createState() => _billingMainState();
+}
+
+class _billingMainState extends State<billingMain> {
+  UserServices userServices = UserServices();
+  List<String> carkeys = [];
+  bool loaded = false;
+  int currentpage = 0;
+  void setcurrentpage(int page) {
+    print(page);
+    setState(() {
+      currentpage = page;
+    });
+  }
+
+  Future<QuerySnapshot> getcardata() async {
+    QuerySnapshot data = await userServices.getcars();
+    carkeys.clear();
+    for (DocumentSnapshot snapshot in data.docs) {
+      carkeys.add(snapshot.id.toString());
+    }
+    loaded = true;
+    return data;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,247 +54,88 @@ class billingMain extends StatelessWidget {
         ),
       ),
       body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 180,
-              child: carCarousal(
-                items: [
-                  // buildVehiclecard(),
-                  // buildVehiclecard(),
-                  // buildVehiclecard(),
-                  // buildVehiclecard(),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'PAYMENT DUE',
-                        style: subtitle.copyWith(
-                          color: maintheme,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      PaynowTile(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        'RECENT TRANSACTIONS',
-                        style: subtitle.copyWith(
-                          color: darktext,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      recentTransactionsTile(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Text('See all Transactions'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class recentTransactionsTile extends StatelessWidget {
-  const recentTransactionsTile({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: maintheme,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: Container(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'MIDAS',
-                        style: TextStyle(
-                          color: darktext,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'February 02, 2019',
-                        style: TextStyle(
-                          color: darktext.withAlpha(100),
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        'Tires, Brakes',
-                        style: TextStyle(
-                          color: darktext.withAlpha(100),
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      '\$ 125',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: maintheme,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      color: darktext,
-                      size: 35,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        Divider(
-          color: darktext.withAlpha(100),
-        ),
-      ],
-    );
-  }
-}
-
-class PaynowTile extends StatelessWidget {
-  const PaynowTile({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      color: Colors.white,
-      elevation: 7,
-      surfaceTintColor: Colors.white,
-      child: Container(
-        padding: EdgeInsets.all(15),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
+        child: FutureBuilder(
+          future: getcardata(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data!.size != 0) {
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Jiffy Lube',
-                    style: subtitle.copyWith(
-                      fontSize: 15,
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    height: 180,
+                    child: carCarousal(
+                      setCurrentpage: setcurrentpage,
+                      items: [
+                        for (DocumentSnapshot doc in snapshot.data!.docs)
+                          buildVehiclecard(
+                              carmaker: doc.get('carmaker'),
+                              carmodel: doc.get('carmodel'))
+                      ],
                     ),
                   ),
                   SizedBox(
-                    height: 7,
+                    height: 15,
                   ),
-                  Text(
-                    'March 12, 2019',
-                    style: TextStyle(
-                      color: darktext.withAlpha(100),
-                      fontSize: 13,
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            paymentDueSection(
+                              carkey: carkeys[currentpage],
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              'RECENT TRANSACTIONS',
+                              style: subtitle.copyWith(
+                                color: darktext,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            recentTransactionsTile(),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    'Oil Change and Standard Checkup',
-                    style: TextStyle(
-                      color: darktext.withAlpha(100),
-                      fontSize: 13,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: Text('See all Transactions'),
+                      ),
+                    ],
                   ),
                 ],
-              ),
-            ),
-            Column(
-              children: [
-                Text(
-                  'Total: \$65',
+              );
+            } else if (snapshot.hasData && snapshot.data!.size == 0) {
+              return Center(
+                child: Text(
+                  'Please add Vehicle in DashBoard',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: maintheme,
+                    color: darktext,
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    side: BorderSide(
-                      color: Colors.red,
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    'Pay Now',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ),
       ),
     );

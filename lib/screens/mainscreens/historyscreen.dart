@@ -5,28 +5,25 @@ import 'package:vehicle_maintenance_app/services/constants.dart';
 import 'package:vehicle_maintenance_app/services/user_services.dart';
 import 'package:vehicle_maintenance_app/widgets/servicetile.dart';
 
-class scheduleScreen extends StatefulWidget {
-  const scheduleScreen({Key? key}) : super(key: key);
+class historyScreen extends StatefulWidget {
+  const historyScreen({Key? key}) : super(key: key);
 
   @override
-  State<scheduleScreen> createState() => _scheduleScreenState();
+  State<historyScreen> createState() => _historyScreenState();
 }
 
-class _scheduleScreenState extends State<scheduleScreen> {
-  int totalcost = 0;
+class _historyScreenState extends State<historyScreen> {
   Map<String, List<DocumentSnapshot>> carservices = {};
+
   final UserServices userServices = UserServices();
+
   Future<Map<String, List<DocumentSnapshot>>> getdata() async {
-    QuerySnapshot querySnapshot =
-        await userServices.getunpaidservicewithuserkey();
-    totalcost = 0;
+    QuerySnapshot querySnapshot = await userServices.getserviceswithuserkey();
     carservices.clear();
     for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
       carservices.putIfAbsent(documentSnapshot.get('carkey'), () => []);
       carservices[documentSnapshot.get('carkey').toString()]
           ?.add(documentSnapshot);
-
-      totalcost += int.parse(documentSnapshot.get('serviceprice').toString());
     }
     return carservices;
   }
@@ -35,78 +32,50 @@ class _scheduleScreenState extends State<scheduleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
         title: Text(
-          "Schedules",
+          'History',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: darktext,
           ),
         ),
       ),
-      body: FutureBuilder(
+      body: Container(
+        child: FutureBuilder(
           future: getdata(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data!.length != 0) {
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        physics: BouncingScrollPhysics(),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, i) {
-                          return section(
-                              carkey: snapshot.data!.keys.elementAt(i),
-                              documentSnapshot:
-                                  snapshot.data!.values.elementAt(i));
-                        }),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Total Cost: ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          '₹ ' + totalcost.toString(),
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              return ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                physics: BouncingScrollPhysics(),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, i) {
+                  return section(
+                    carkey: snapshot.data!.keys.elementAt(i),
+                    documentSnapshot: snapshot.data!.values.elementAt(i),
+                  );
+                },
               );
             } else if (snapshot.hasData && snapshot.data!.length == 0) {
               return Center(
                 child: Text(
-                  'No Services Booked Yet!!',
+                  'No Service History Found',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: darktext,
                   ),
                 ),
               );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+            } else
+              return Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
     );
   }
 
@@ -145,18 +114,6 @@ class _scheduleScreenState extends State<scheduleScreen> {
                   );
               }),
         ),
-        // Flexible(
-        //   child: ListView.builder(
-        //     shrinkWrap: true,
-        //     physics: NeverScrollableScrollPhysics(),
-        //     itemCount: documentSnapshot.length,
-        //     itemBuilder: (context, i) {
-        //       return serviceTile(
-        //         documentSnapshot: documentSnapshot[i],
-        //       );
-        //     },
-        //   ),
-        // ),
         Column(
           children: [
             for (DocumentSnapshot ds in documentSnapshot)

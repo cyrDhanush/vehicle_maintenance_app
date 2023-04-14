@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 
-class successfullScreen extends StatelessWidget {
-  const successfullScreen({Key? key}) : super(key: key);
-  final String servicehead = "Thank you for Scheduling your Service.";
-  final String servicedes =
-      "You'll recieve a confirmation email from Jiffy Lube to confirm your requested date and time";
+class paymentSuccessfullScreen extends StatelessWidget {
+  const paymentSuccessfullScreen({Key? key}) : super(key: key);
+  final String servicehead = "Successfully Paid";
+  final String servicedes = "Your Payment has been Successfully Completed";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,
         scrolledUnderElevation: 0,
@@ -45,7 +45,9 @@ class successfullScreen extends StatelessWidget {
               ),
             ),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(
                   color: maintheme,
@@ -57,9 +59,10 @@ class successfullScreen extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(15),
                 child: Text(
-                  'Back to Dashboard',
+                  'Back to Billing Menu',
                   style: TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
