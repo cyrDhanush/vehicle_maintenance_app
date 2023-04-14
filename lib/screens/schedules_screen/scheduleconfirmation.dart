@@ -7,6 +7,7 @@ import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/models/servicemodel.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
 import 'package:vehicle_maintenance_app/screens/schedules_screen/schedulesuccess.dart';
+import 'package:vehicle_maintenance_app/services/constants.dart';
 import 'package:vehicle_maintenance_app/services/user_services.dart';
 import 'package:vehicle_maintenance_app/widgets/loadingblock.dart';
 
@@ -124,18 +125,19 @@ class scheduleConfirmation extends StatelessWidget {
                         SizedBox(
                           width: 20,
                         ),
-                        Container(
-                          width: 250,
-                          child: Text(
-                            // 'Jiffy Lube\n756, Barrington Road,\nHanover Park',
-                            serviceModel.shopmodel!.shopname +
-                                '\n' +
-                                serviceModel.shopmodel!.shopaddress,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: darktext.withAlpha(100),
-                              fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Container(
+                            child: Text(
+                              // 'Jiffy Lube\n756, Barrington Road,\nHanover Park',
+                              serviceModel.shopmodel!.shopname +
+                                  '\n' +
+                                  serviceModel.shopmodel!.shopaddress,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: darktext.withAlpha(100),
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -171,7 +173,7 @@ class scheduleConfirmation extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Andrew Fuller',
+                          username,
                           style: TextStyle(
                             color: maintheme,
                             fontSize: 18,

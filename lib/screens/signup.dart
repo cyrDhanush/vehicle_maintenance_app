@@ -121,11 +121,18 @@ class _SignUpState extends State<SignUp> {
                         height: 50,
                       ),
                       Row(),
+                      // Container(
+                      //   child: Icon(
+                      //     Icons.car_crash_sharp,
+                      //     color: Colors.redAccent,
+                      //     size: 100,
+                      //   ),
+                      // ),
                       Container(
-                        child: Icon(
-                          Icons.car_crash_sharp,
-                          color: Colors.redAccent,
-                          size: 100,
+                        height: 150,
+                        width: 150,
+                        child: Image.asset(
+                          'assets/images/logo_color.png',
                         ),
                       ),
                       SizedBox(

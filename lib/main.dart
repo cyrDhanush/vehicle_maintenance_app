@@ -19,6 +19,9 @@ import 'package:vehicle_maintenance_app/screens/signup.dart';
 import 'package:vehicle_maintenance_app/screens/payment/paymentsuccessfull.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:vehicle_maintenance_app/screens/upcoming_appointments.dart';
+import 'package:vehicle_maintenance_app/services/decision.dart';
+
+String initialroute = '';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -26,6 +29,7 @@ void main() async {
   ));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  initialroute = await logindecision();
   runApp(MyApp());
 }
 
@@ -48,10 +52,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: '/home',
+      initialRoute: initialroute,
+      // home: scheduleSuccess(),
       // initialRoute: '/cardselection',
       onGenerateRoute: RouteGenerator.generateRoute,
-      // home: LoginPage(),
+      // home: SignUp(),
       // home: homeParent(),
       // home: scheduleShop(
       //   serviceModel: ServiceModel(),

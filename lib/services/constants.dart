@@ -6,4 +6,5 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 CollectionReference userbase = firestore.collection('userdata');
 
-const String userkey = '6QEiHxQ8MMeCWVyBoK8U0qHImvy2';
+String userkey = '';
+String username = '';

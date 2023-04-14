@@ -137,6 +137,9 @@ class PaynowTile extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(
+              width: 15,
+            ),
             Column(
               children: [
                 Text(

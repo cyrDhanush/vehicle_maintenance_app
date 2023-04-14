@@ -268,6 +268,9 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 500,
+                    ),
                   ],
                 ),
               ),

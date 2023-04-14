@@ -73,10 +73,12 @@ class scheduleSuccess extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Icon(
-              Icons.car_crash_rounded,
-              color: Colors.red,
-              size: 70,
+            Container(
+              height: 150,
+              width: 150,
+              child: Image.asset(
+                'assets/images/logo_color.png',
+              ),
             ),
             SizedBox(
               height: 20,

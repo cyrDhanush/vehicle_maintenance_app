@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dhanush.vehicle_maintenance_app">
    <application
-        android:label="vehicle_maintenance_app"
+        android:label="VehiCare"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -93,14 +93,14 @@ class _DashboardState extends State<Dashboard> {
                     height: 10,
                   ),
                   Container(
-                    height: 70,
+                    // height: 70,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        shopcircle(),
-                        shopcircle(),
-                        shopcircle(),
-                        shopcircle(),
+                        shopcircle(imgname: 'lg1.jpg'),
+                        shopcircle(imgname: 'lg2.jpg'),
+                        shopcircle(imgname: 'lg3.jpg'),
+                        shopcircle(imgname: 'lg4.jpg'),
                         SizedBox(
                           width: 20,
                         ),
@@ -304,16 +304,22 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget shopcircle() {
-    return Expanded(
-      child: Container(
-        height: 60,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: maintheme.withAlpha(50),
-            width: 5,
-          ),
+  Widget shopcircle({String imgname = 'lg1.jpg'}) {
+    return Container(
+      height: MediaQuery.of(context).size.width / 6,
+      width: MediaQuery.of(context).size.width / 6,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: maintheme.withAlpha(50),
+          width: 5,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100),
+        child: Image.asset(
+          'assets/logos/' + imgname,
+          fit: BoxFit.fill,
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/homeparent.dart';
 import 'package:vehicle_maintenance_app/screens/signup.dart';
+import 'package:vehicle_maintenance_app/services/constants.dart';
 import 'package:vehicle_maintenance_app/services/user_auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -142,11 +143,18 @@ class _LoginPageState extends State<LoginPage> {
                           height: 50,
                         ),
                         Row(),
+                        // Container(
+                        //   child: Icon(
+                        //     Icons.car_crash_sharp,
+                        //     color: Colors.redAccent,
+                        //     size: 100,
+                        //   ),
+                        // ),
                         Container(
-                          child: Icon(
-                            Icons.car_crash_sharp,
-                            color: Colors.redAccent,
-                            size: 100,
+                          height: 150,
+                          width: 150,
+                          child: Image.asset(
+                            'assets/images/logo_color.png',
                           ),
                         ),
                         SizedBox(

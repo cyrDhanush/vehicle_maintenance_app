@@ -67,10 +67,12 @@ class paymentSuccessfullScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
-              Icons.car_crash_sharp,
-              color: Colors.red,
-              size: 80,
+            Container(
+              height: 150,
+              width: 150,
+              child: Image.asset(
+                'assets/images/logo_color.png',
+              ),
             ),
             SizedBox(
               height: 60,

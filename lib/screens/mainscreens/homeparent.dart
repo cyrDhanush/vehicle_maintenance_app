@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vehicle_maintenance_app/global.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/dashboard.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/historyscreen.dart';
 import 'package:vehicle_maintenance_app/screens/mainscreens/schedulescreen.dart';
 import 'package:vehicle_maintenance_app/screens/payment/billingmain.dart';
 import 'package:vehicle_maintenance_app/services/constants.dart';
+import 'package:vehicle_maintenance_app/widgets/loadingblock.dart';
 
 class homeParent extends StatefulWidget {
   const homeParent({Key? key}) : super(key: key);
@@ -106,34 +108,45 @@ class _homeParentState extends State<homeParent> {
                       shape: CircleBorder(),
                       child: CircleAvatar(
                         radius: 35,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(200),
+                          child: Image.asset('assets/images/profilephoto.png'),
+                        ),
                         backgroundColor: Colors.black,
                       ),
                     ),
                     SizedBox(
                       width: 15,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.white,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Andrew Fullter',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
+                          SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
+                          Text(
+                            username,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
                     ),
                   ],
                 ),
@@ -145,7 +158,7 @@ class _homeParentState extends State<homeParent> {
                 children: [
                   draweritem(
                     title: 'Vehicle',
-                    icon: Icons.car_crash_rounded,
+                    icon: Icons.car_rental_rounded,
                   ),
                   draweritem(
                     title: 'Settings',
@@ -166,8 +179,15 @@ class _homeParentState extends State<homeParent> {
                   draweritem(
                     title: 'Log Out',
                     icon: Icons.logout_rounded,
-                    onPressed: () {
-                      print(firebaseAuth.toString());
+                    onPressed: () async {
+                      loadingBlock(context: context);
+                      await firebaseAuth.signOut();
+                      SharedPreferences sharedpref =
+                          await SharedPreferences.getInstance();
+                      sharedpref.setString('userkey', '');
+                      sharedpref.setString('username', '');
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
                   ),
                 ],
@@ -187,10 +207,26 @@ class _homeParentState extends State<homeParent> {
                   SizedBox(
                     width: 20,
                   ),
-                  Icon(
-                    Icons.car_crash_rounded,
-                    color: Colors.red,
-                    size: 60,
+                  // Icon(
+                  //   Icons.car_crash_rounded,
+                  //   color: Colors.red,
+                  //   size: 60,
+                  // ),
+                  Container(
+                    height: 60,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 20,
+                          color: Colors.black.withAlpha(50),
+                        ),
+                      ],
+                    ),
+                    child: Image.asset(
+                      'assets/images/logo_black.png',
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -217,7 +253,7 @@ class _homeParentState extends State<homeParent> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.brightness_low),
+            icon: Icon(Icons.currency_rupee_rounded),
             label: 'Billing',
           ),
           BottomNavigationBarItem(

@@ -162,19 +162,34 @@ class buildVehiclecard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Today's Mileage",
+                              'Car Maker: ',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              carmaker,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             Text(
-                              "134,571",
+                              'Car Model: ',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 13,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              carmodel,
+                              style: TextStyle(
+                                fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
